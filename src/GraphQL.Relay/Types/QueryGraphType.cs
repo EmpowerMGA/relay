@@ -9,13 +9,14 @@ namespace GraphQL.Relay.Types
             Name = "Query";
 
             Field<NodeInterface>()
+                
                 .Name("node")
                 .Description("Fetches an object given its global Id")
                 .Argument<NonNullGraphType<IdGraphType>>("id", "The global Id of the object")
                 .Resolve(ResolveObjectFromGlobalId);
         }
 
-        private object ResolveObjectFromGlobalId(ResolveFieldContext<object> context)
+        private object ResolveObjectFromGlobalId(IResolveFieldContext<object> context)
         {
             var globalId = context.GetArgument<string>("id");
             var parts = Node.FromGlobalId(globalId);

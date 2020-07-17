@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using GraphQL.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using GraphQL.SystemTextJson;
 
 namespace GraphQL.Relay.Http
 {
@@ -16,12 +19,14 @@ namespace GraphQL.Relay.Http
 
     public bool HasErrors => Results.Any(r => r.Errors?.Count > 0);
 
-    public string Write()
+    public Task WriteAsync(Stream stream, CancellationToken stoppingToken = default)
     {
-      return Writer.Write(IsBatched ?
+      return Writer.WriteAsync(
+          stream,
+          IsBatched ?
           (object)Results :
-          Results.FirstOrDefault()
-      );
+          Results.FirstOrDefault(),
+      stoppingToken);
     }
   }
 }
